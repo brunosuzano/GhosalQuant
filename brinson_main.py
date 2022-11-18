@@ -1,34 +1,36 @@
 import numpy as np
 import pandas as pd
 import seaborn as sns
-
 import matplotlib.pyplot as plt
+from time import perf_counter
 
-INDUSTRY = ['Benchmark', 'Healthcare', 'Technology', 'Media & Telecom', 'Cons. Disc', 'Cons. Staples', 'Energy',
-            'Industrials']
-CURRENCY = ['USD', 'GBP', 'EUR', 'CAD']
 
+start = perf_counter()
 df = pd.read_excel('brinson_sheet.xlsx')
-
-
-# groups different rows by headers using indices
-def group_rows(df):
-    # i1 = df['Factors'].index.get_loc('INDUSTRY')
-    factors = list(df['Factors'])
-
-    index_industry = factors.index('INDUSTRY')
-    index_currency = factors.index('CURRENCY')
-    index_country = factors.index('COUNTRY')
-
-    return index_industry, index_currency, index_country
+end = perf_counter()
+print(f'Time taken to read spreadsheet: {end - start} seconds')
 
 
 def display_df(df):
-    print(df)  # for the short-term - doesn't display everything in terminal
-
+    # print(df)  # for the short-term - doesn't display everything in terminal
+    pass
 
 def run_PA(df):
-    pass
+
+    portfolio_weights = {}
+    benchmark_weights = {}
+    portfolio_returns = {}
+    benchmark_returns = {}
+
+    allocation_effect = {}
+    selection_effect = {}
+
+    grouped_df = df.groupby("Category")
+    categories = grouped_df.groups.keys()
+    print(categories)
+
+    for key, item in grouped_df:
+        print(grouped_df.get_group(key), "\n\n")
 
 
 def calc_realised(fund_return):
@@ -36,10 +38,7 @@ def calc_realised(fund_return):
 
 
 def main():
-    index_industry, index_currency, index_country = group_rows(df)
-
-    print(index_industry, index_currency, index_country)
-    print(df.iloc[index_industry:index_currency, :])  # df.iloc(row_index, column index)
+    run_PA(df)
 
 
 if __name__ == '__main__':
