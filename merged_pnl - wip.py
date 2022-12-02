@@ -2,10 +2,12 @@ import pandas as pd
 import numpy as np
 import yfinance as yf
 from time import perf_counter
-
+import logging
 
 def update_portfolio(df):
     symbols = df['Stock symbol']
+
+    # lists of the content being updated
     updated_prices = []
     names = []
     sectors = []
@@ -19,6 +21,7 @@ def update_portfolio(df):
         name = ticker.info['longName']
         sector = ticker.info['sector']
         country = ticker.info['country']
+
         updated_prices.append(updated_price)
         names.append(name)
 
@@ -69,7 +72,24 @@ def run_pnl(df):
 
 
 def add_stock(df):
-    pass
+
+    try:
+        stock = str(input('Enter stock symbol: '))
+
+        # built-in python method to confirm for date format?
+        purchase date = input('Enter date of purchase (dd/mm/yyyy): ')
+
+        # price should be purely nominal with respect to the currency the stock symbol is traded in
+        purchase_price = int(input('Enter price'))
+        qty = int(input('Enter quantity'))
+
+    except TypeError:
+        print('Please confirm that your purchase price,')
+    # exception handle the inputs, then confirm correct values
+
+    except
+
+
     # vars needed: stock symbol, purchase price, qty
 
 def main():
