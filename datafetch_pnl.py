@@ -3,13 +3,7 @@ import yfinance as yf
 import seaborn as sns
 import matplotlib.pyplot as plt
 from time import perf_counter
-
-
-
-
-
-
-
+import numpy as np
 
 
 # trade date: date that the order is executed.
@@ -30,7 +24,7 @@ from time import perf_counter
 # 'longName' --> name of company
 # 'currentPrice'
 # 'currency
-
+# 'country': 'United States' --> for Brinson
 
 
 # updates current price, names (in light of Meta, Alphabet), then returns updated dataframe
@@ -38,6 +32,10 @@ def update_portfolio(df):
     symbols = df['Stock symbol']
     updated_prices = []
     names = []
+    sectors = []
+    countries = []
+
+
 
     # iterates through each stock and fetches info
     for i, symbol in enumerate(symbols):
@@ -45,17 +43,24 @@ def update_portfolio(df):
         updated_price = ticker.info['currentPrice']
         currency = ticker.info['currency']
         name = ticker.info['longName']
+        sector = ticker.info['sector']
+        country = ticker.info['country']
 
         updated_prices.append(updated_price)
         names.append(name)
+        sectors.append(sector)
+        countries.append(country)
 
         print(f'{symbol} trading at {updated_price} {currency}')
+        # print(sectors)
         # NOTE: fetching for every row may create significant overhead
         # possibly find a way to prevent fetching same stock twice?
 
     # replaces columns with updated information
     df['Company name'] = names
     df['Current price'] = updated_prices
+    df['Industry'] = sectors
+    df['Country'] = countries
 
     return df
 
@@ -68,6 +73,11 @@ def main():
     df = pd.read_excel('pnl_pf.xlsx', sheet_name='Portfolio', index_col=False)
     print(df)
     updated_df = update_portfolio(df)
+    df = updated_df
+    pf_value_column = df[['Current price', 'Qty. shares']].product(axis=1)
+    pf_value = np.sum(pf_value_column)
+    print(pf_value)
+
     print(updated_df)
     updated_df.to_excel('pnl_pf.xlsx', sheet_name='Portfolio', index=False)
     # note: when pandas writes to excel, it makes the spreadsheet look pretty gross:
@@ -76,5 +86,7 @@ def main():
 
 
 if __name__ == '__main__':
+    start = perf_counter()
     main()
+    end = perf_counter()
     print(f'runtime: {end - start} seconds')
