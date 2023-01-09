@@ -23,7 +23,7 @@ def BS_Prob(last_price, target, stdev_yearly, horizon):
     # Risk-free rate - needed under risk-neutral assumption
     r = 0.03
 
-    # The calculation of the d2 parameter for the probability density function
+    # The calculation of the d2 parameter for the cdf function
     d2 = (np.log(last_price / target) + ((r - stdev_yearly ^ 2) / 2) * horizon) / (stdev_yearly * np.sqrt(horizon))
 
     # Calculation of the cumulative normal distribution function
