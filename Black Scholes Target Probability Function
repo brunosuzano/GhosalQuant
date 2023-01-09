@@ -1,0 +1,32 @@
+import numpy as np
+from scipy.stats import norm
+
+'''
+The estimation of the uncertainty is taken in relation to a stock's price characteristics:
+The estimation shall be realised using the probability of the exercise in the Black Merton Scholes'
+option pricing model.
+
+In this case, the strike price is replaced with an analysts' target price, which should 
+indicate the probability of the price being reached, under current market assumptions.
+
+See Chapter 15 from Hull's Options, Futures, and other derivatives for more details on how the 
+probability is calculated.
+
+The confidence in this case is treated similarly to the pricing of a digital option with a notional of 1
+To simplify things, it estimates the probability that the target price is touched.
+
+The model can be found in the fusion invest financial models reference manual at page 887.
+'''
+
+
+def BS_Prob(last_price, target, stdev_yearly, horizon):
+    # Risk-free rate - needed under risk-neutral assumption
+    r = 0.03
+
+    # The calculation of the d2 parameter for the probability density function
+    d2 = (np.log(last_price / target) + ((r - stdev_yearly ^ 2) / 2) * horizon) / (stdev_yearly * np.sqrt(horizon))
+
+    # Calculation of the cumulative normal distribution function
+    prob = norm.cdf(d2)
+
+    return prob
