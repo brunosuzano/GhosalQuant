@@ -1,5 +1,9 @@
 import numpy as np
 from scipy.stats import norm
+import yfinance as yf
+from datetime import date
+from datetime import timedelta
+
 
 '''
 The estimation of the uncertainty is taken in relation to a stock's price characteristics:
@@ -30,3 +34,22 @@ def BS_Prob(last_price, target, stdev_yearly, horizon):
     prob = norm.cdf(d2)
 
     return prob
+
+def yearly_stdv():
+
+    #Set out today's date and the year to date
+    today = date.today()
+    ytd = today - timedelta(days=365)
+
+    print(ytd)
+    tickers = ['AMZN', 'AAPL', 'BRK-A', 'XOM', 'MSFT', 'TSLA', 'UNH']
+    data = yf.download(tickers, start=ytd.strftime("%Y-%m-%d"), end=today.strftime("%Y-%m-%d"))
+    prices = data['Adj Close']
+    prices.tail()
+
+    returns = prices.pct_change()
+    stdev = returns.std()
+
+    return stdev
+    
+  
